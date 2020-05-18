@@ -1,4 +1,4 @@
-const { returnError } = require('../utils')
+const { throwError } = require('../utils')
 const joi = require('@hapi/joi')
 
 const validate = (data, schema) => {
@@ -14,7 +14,7 @@ const validationHandler = ({ schema, check = 'body' }) => {
       const { details } = error
       const message = details.map(i => i.message).join(',')
 
-      return next(returnError({
+      return next(throwError({
         errorMessage: message,
         statusCode: 400
       }))

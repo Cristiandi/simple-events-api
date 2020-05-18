@@ -30,7 +30,9 @@ const rawBodySaver = (req, res, buf, encoding) => {
 
 app.use(bodyParser.json({ verify: rawBodySaver }))
 app.use(bodyParser.urlencoded({ verify: rawBodySaver, extended: true }))
-app.use(bodyParser.raw({ verify: rawBodySaver, type: () => true }))
+
+// TODO: problem when try to ger files from request
+// app.use(bodyParser.raw({ verify: rawBodySaver, type: () => true }))
 
 app.use(require('./routes'))
 

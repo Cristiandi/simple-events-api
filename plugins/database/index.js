@@ -1,20 +1,28 @@
-const path = require('path')
-
 const environment = require('../../environment')
 
-const { returnError, isEmptyObject } = require('../../utils')
+const { throwError, isEmptyObject } = require('../../utils')
 
 class DataBase {
   constructor () {
-    const dbPath = path.resolve(__dirname, '../../db.sqlite')
-
-    this.knex = require('knex')({
+    const config = {
       client: environment.DB_CLIENT,
       connection: {
-        filename: dbPath
+        host: environment.DB_HOST,
+        user: environment.DB_USER,
+        password: environment.DB_PASSWORD,
+        database: environment.DB_NAME,
+        port: environment.DB_PORT
       },
-      useNullAsDefault: true
-    })
+      pool: {
+        min: 2,
+        max: 10
+      },
+      migrations: {
+        tableName: 'knex_migrations'
+      }
+    }
+
+    this.knex = require('knex')(config)
   }
 
   async createOne ({ objectToCreate = {}, tableName, trx }) {
@@ -77,7 +85,7 @@ class DataBase {
     })
 
     if (!existing) {
-      throw returnError({
+      throw throwError({
         errorMessage: `can't get the ${tableName} with id ${id}.`,
         statusCode: 404
       })
@@ -112,7 +120,7 @@ class DataBase {
     })
 
     if (!existing) {
-      throw returnError({
+      throw throwError({
         errorMessage: `can't get the ${tableName} with id ${id}.`,
         statusCode: 404
       })

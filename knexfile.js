@@ -1,25 +1,27 @@
 // Update with your config settings.
-const path = require('path')
-
 const environment = require('./environment')
 
-const dbPath = path.resolve(__dirname, './db.sqlite')
+const config = {
+  client: environment.DB_CLIENT,
+  connection: {
+    host: environment.DB_HOST,
+    user: environment.DB_USER,
+    password: environment.DB_PASSWORD,
+    database: environment.DB_NAME,
+    port: environment.DB_PORT
+  },
+  pool: {
+    min: 2,
+    max: 10
+  },
+  migrations: {
+    tableName: 'knex_migrations'
+  }
+}
 
 module.exports = {
 
-  local: {
-    client: environment.DB_CLIENT,
-    connection: {
-      filename: dbPath
-    },
-    useNullAsDefault: true
-  },
+  local: { ...config },
 
-  development: {
-    client: environment.DB_CLIENT,
-    connection: {
-      filename: dbPath
-    },
-    useNullAsDefault: true
-  }
+  development: { ...config }
 }
