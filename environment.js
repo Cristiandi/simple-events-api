@@ -27,7 +27,7 @@ dotenv.config({ path: envPath })
 const enviroment = {
   /* GENERAL */
   NODE_ENV,
-  APP_PORT: process.env.APP_PORT || 8080,
+  APP_PORT: process.env.APP_PORT,
   /* DATABASE INFORMATION */
   DB_CLIENT: process.env.DB_CLIENT,
   DB_USER: process.env.DB_USER,
