@@ -4,7 +4,7 @@ const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const errorHandler = require('strong-error-handler')
 
-const environment = require('./environment')
+// const environment = require('./environment')
 
 const app = express()
 
@@ -42,11 +42,4 @@ app.use(errorHandler({
   log: ['local', 'development', 'staging', 'production'].includes(app.get('env'))
 }))
 
-const port = environment.APP_PORT
-
-const server = app.listen(port, () => {
-  // eslint-disable-next-line no-console
-  console.log('NODE JS app is running on port:', port, 'at', environment.NODE_ENV, 'environment.')
-})
-
-module.exports = server
+module.exports = app
