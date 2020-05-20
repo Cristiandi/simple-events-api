@@ -7,6 +7,7 @@ const { authHandler } = require('../../middlewares/auth.middleware')
 const { schema: createSchema } = require('./schemas/create')
 const { schema: getAllSchema } = require('./schemas/get-all')
 const { schema: updateSchema } = require('./schemas/update')
+const { schema: deleteSchema } = require('./schemas/update')
 const { schema: getPlacePredictionsSchema } = require('./schemas/get-place-predictions')
 const { schema: getGeoPointSchema } = require('./schemas/get-geo-point')
 const { schema: uploadImageSchema } = require('./schemas/upload-image')
@@ -33,6 +34,13 @@ router.patch(
   validationHandler({ schema: updateSchema.body, check: 'body' }),
   authHandler,
   eventController.update
+)
+
+router.delete(
+  '/:id',
+  validationHandler({ schema: deleteSchema.params, check: 'params' }),
+  authHandler,
+  eventController.delete
 )
 
 router.get(

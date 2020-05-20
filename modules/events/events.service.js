@@ -32,6 +32,8 @@ class EventService {
       attributes: {}
     })
 
+    if (!items) return []
+
     let i = items.length
     let k = 0
 
@@ -41,9 +43,12 @@ class EventService {
       k += 1
     }
 
-    console.log(skip, limit + skip - 1)
+    const evenNewItems = newItems.map(item => ({
+      ...item,
+      imageUrl: item.imageUrl || 'https://storage.googleapis.com/simple-events-dev-bucket/event-images/default_event.png'
+    }))
 
-    return newItems.slice(skip, limit + skip)
+    return evenNewItems.slice(skip, limit + skip)
   }
 
   async getOne ({ attributes = {} }) {
@@ -103,6 +108,34 @@ class EventService {
     })
 
     return updated
+  }
+
+  async askForDelete ({ id, userThatAsk = {} }) {
+    const currentEvent = await this.getOne({
+      attributes: {
+        id
+      }
+    })
+
+    if (!currentEvent) {
+      throw throwError({
+        errorMessage: `can't the event with ${id}.`,
+        statusCode: 404
+      })
+    }
+
+    if (currentEvent.userId !== userThatAsk.id) {
+      throw throwError({
+        errorMessage: 'your user does not have permission to update this event.',
+        statusCode: 403
+      })
+    }
+
+    const deleted = await this.delete({
+      id: currentEvent.id
+    })
+
+    return deleted
   }
 
   async getPlacePredictions ({ input, lat = undefined, long = undefined }) {
@@ -185,7 +218,7 @@ class EventService {
 
     const publicLink = `https://storage.googleapis.com/${makePublicResult.bucket}/${makePublicResult.object}`
 
-    console.log('publicLink', publicLink)
+    // console.log('publicLink', publicLink)
 
     const updated = await this.update({
       id: currentEvent.id,

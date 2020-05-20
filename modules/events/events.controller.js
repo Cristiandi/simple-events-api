@@ -86,6 +86,31 @@ class EventController {
    * @param {import("express").NextFunction} next
    * @memberof VisitanteController
    */
+  async delete (req, res, next) {
+    try {
+      const { params: { id }, user } = req
+
+      const service = new EventService()
+
+      const result = await service.askForDelete({
+        id,
+        userThatAsk: user
+      })
+
+      return res.status(200).json(result)
+    } catch (error) {
+      return next(error)
+    }
+  }
+
+  /**
+   *
+   *
+   * @param {import("express").Request} req
+   * @param {import("express").Response} res
+   * @param {import("express").NextFunction} next
+   * @memberof VisitanteController
+   */
   async getPlacePredictions (req, res, next) {
     try {
       const { query: { input, lat, long } } = req

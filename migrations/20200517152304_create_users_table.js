@@ -3,7 +3,7 @@ const up = knex => {
     if (!exists) {
       return knex.schema.createTable('users', table => {
         table.increments('id')
-        table.string('fullName', 200).notNullable()
+        table.string('username', 200).notNullable()
         table.string('email', 100).notNullable()
         table.string('authUid', 100)
 

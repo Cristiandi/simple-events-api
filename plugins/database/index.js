@@ -2,27 +2,29 @@ const environment = require('../../environment')
 
 const { throwError, isEmptyObject } = require('../../utils')
 
+const config = {
+  client: environment.DB_CLIENT,
+  connection: {
+    host: environment.DB_HOST,
+    user: environment.DB_USER,
+    password: environment.DB_PASSWORD,
+    database: environment.DB_NAME,
+    port: environment.DB_PORT
+  },
+  pool: {
+    min: 2,
+    max: 100
+  },
+  migrations: {
+    tableName: 'knex_migrations'
+  }
+}
+
+const knex = require('knex')(config)
+
 class DataBase {
   constructor () {
-    const config = {
-      client: environment.DB_CLIENT,
-      connection: {
-        host: environment.DB_HOST,
-        user: environment.DB_USER,
-        password: environment.DB_PASSWORD,
-        database: environment.DB_NAME,
-        port: environment.DB_PORT
-      },
-      pool: {
-        min: 2,
-        max: 10
-      },
-      migrations: {
-        tableName: 'knex_migrations'
-      }
-    }
-
-    this.knex = require('knex')(config)
+    this.knex = knex
   }
 
   async createOne ({ objectToCreate = {}, tableName, trx }) {
